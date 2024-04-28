@@ -41,7 +41,7 @@ public class AuthService {
         if (rs != null) {
             new Thread(() -> {
                 try {
-                    EmailUtil.sendMail(rs.getEmail(), rs.getPassword());
+                    new EmailUtil().sendMail(rs.getEmail(), rs.getPassword());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

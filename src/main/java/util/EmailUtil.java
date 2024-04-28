@@ -18,69 +18,73 @@ import config.MailConfig;
 
 public class EmailUtil {
 
-    public static void sendMail(String to, String code) throws IOException {
+    public void sendMail(String to, String code) throws IOException {
 
-        Properties pros = MailConfig.loadMailProperties();
+        Properties pros;
+		try {
+			pros = new MailConfig().loadMailProperties();
+			
+			Authenticator auth = new Authenticator() {
+	            @Override
+	            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+	                // TODO Auto-generated method stub
+	                return new javax.mail.PasswordAuthentication(pros.getProperty("mail.from"), pros.getProperty("mail.password"));
+	            }
+	        };
 
-        // Create Authenticator
+	        // Create Working Session
 
-        Authenticator auth = new Authenticator() {
-            @Override
-            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                // TODO Auto-generated method stub
-                return new javax.mail.PasswordAuthentication(pros.getProperty("mail.from"), pros.getProperty("mail.password"));
-            }
-        };
+	        Session ses = Session.getInstance(pros, auth);
 
-        // Create Working Session
+	        // Send Email
 
-        Session ses = Session.getInstance(pros, auth);
+	        // Create a new message
+	        MimeMessage msg = new MimeMessage(ses);
+	        try {
+	            msg.addHeader("Content-Type", "text/HTML; charset=UTF-8");
 
-        // Send Email
+	            // Mail sender
+	            msg.setFrom(pros.getProperty("mail.from"));
 
-        // Create a new message
-        MimeMessage msg = new MimeMessage(ses);
-        try {
-            msg.addHeader("Content-Type", "text/HTML; charset=UTF-8");
+	            // Recipients
+	            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
 
-            // Mail sender
-            msg.setFrom(pros.getProperty("mail.from"));
+	            // Subject
+	            msg.setSubject("Authorize Account");
 
-            // Recipients
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
+	            // Set Date to send email
 
-            // Subject
-            msg.setSubject("Authorize Account");
+	            msg.setSentDate(new Date());
 
-            // Set Date to send email
+	            // Set reply
 
-            msg.setSentDate(new Date());
+	            msg.setReplyTo(null); // Do not reply
 
-            // Set reply
+	            // Construct the HTML content
+	            String htmlContent = "<html><body><p>Your security code is: <strong>" + code + "</strong></p></body></html>";
 
-            msg.setReplyTo(null); // Do not reply
+	            // Create a multipart message
+	            MimeMultipart multipart = new MimeMultipart();
+	            MimeBodyPart htmlPart = new MimeBodyPart();
+	            htmlPart.setContent(htmlContent, "text/html");
 
-            // Construct the HTML content
-            String htmlContent = "<html><body><p>Your security code is: <strong>" + code + "</strong></p></body></html>";
+	            // Add the HTML part to the multipart message
+	            multipart.addBodyPart(htmlPart);
 
-            // Create a multipart message
-            MimeMultipart multipart = new MimeMultipart();
-            MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent(htmlContent, "text/html");
+	            // Set the multipart as the message content
+	            msg.setContent(multipart);
 
-            // Add the HTML part to the multipart message
-            multipart.addBodyPart(htmlPart);
+	            // sending Email
 
-            // Set the multipart as the message content
-            msg.setContent(multipart);
+	            Transport.send(msg);
 
-            // sending Email
-
-            Transport.send(msg);
-
-        } catch (MessagingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+	        } catch (MessagingException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
     }
 }

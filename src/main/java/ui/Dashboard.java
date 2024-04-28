@@ -1,66 +1,85 @@
 package ui;
-
-import java.awt.Font;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import java.awt.*;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import models.User;
+import ui.customPanels.BudgetPanel;
+import ui.customPanels.CategoryPanel;
+import ui.customPanels.HomePanel;
+import ui.customPanels.TransactionPanel;
+
+import java.util.List;
 
 public class Dashboard extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
+    private JButton btnCategory;
+    private JButton btnBudget;
+    private JButton btnHome;
+    private JButton btnTransaction;
+    private JPanel currPanel;
+    private JPanel contentPanel;
+    private List<JPanel> listJpanel;
+    private JLabel lblNewLabel;
 
-	
-	public Dashboard(User user) {
-		setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 996, 566);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(10, 11, 960, 68);
-		contentPane.add(panel);
-		panel.setLayout(null);
-		
-		JLabel lblNewLabel = new JLabel("Dashboard");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 30));
-		lblNewLabel.setBounds(10, 11, 940, 46);
-		panel.add(lblNewLabel);
-		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(10, 90, 135, 426);
-		contentPane.add(panel_1);
-		panel_1.setLayout(null);
-		
-		JButton btnNewButton = new JButton("Home");
-		btnNewButton.setBounds(0, 0, 135, 84);
-		panel_1.add(btnNewButton);
-		
-		JButton btnCategory = new JButton("Category");
-		btnCategory.setBounds(0, 87, 135, 84);
-		panel_1.add(btnCategory);
-		
-		JButton btnBudget = new JButton("Budget");
-		btnBudget.setBounds(0, 171, 135, 84);
-		panel_1.add(btnBudget);
-		
-		JButton btnTransaction = new JButton("Transaction");
-		btnTransaction.setBounds(0, 257, 135, 84);
-		panel_1.add(btnTransaction);
-		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(155, 90, 815, 426);
-		contentPane.add(panel_2);
-		panel_2.setLayout(null);
-	}
+    private void initView(JPanel panel) {
+        currPanel = panel;
+        contentPanel.add(currPanel);
+        contentPanel.revalidate(); // Revalidate the content panel
+        contentPanel.repaint(); // Repaint the content panel
+    }
+
+    private void addEvents() {
+        btnTransaction.addActionListener(e -> changePanel(listJpanel.get(3)));
+        btnHome.addActionListener(e -> changePanel(listJpanel.get(0)));
+        btnCategory.addActionListener(e -> changePanel(listJpanel.get(1)));
+        btnBudget.addActionListener(e -> changePanel(listJpanel.get(2)));
+    }
+
+    private void changePanel(JPanel panel) {
+        if (currPanel != null) {
+            contentPanel.remove(currPanel); // Remove the current panel
+        }
+        initView(panel); // Initialize the new panel
+    }
+
+    public Dashboard(User user) {
+    	setTitle("Quản lý chi tiêu");
+        listJpanel = List.of(new HomePanel(), new CategoryPanel(), new TransactionPanel(), new BudgetPanel());
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        int appWidth = 996; // Application width
+        int navBarWidth = appWidth * 2 / 10; // Width of the navigation bar (2/10 of the application width)
+        setBounds(100, 100, appWidth, 579); // Set the bounds of the frame
+
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(new BorderLayout());
+
+        JPanel navBarPanel = new JPanel(new GridLayout(0, 1));
+        navBarPanel.setPreferredSize(new Dimension(navBarWidth, getHeight()));
+        navBarPanel.setBackground(Color.GRAY);
+
+        btnHome = new JButton("Home");
+        btnCategory = new JButton("Category");
+        btnBudget = new JButton("Budget");
+        btnTransaction = new JButton("Transaction");
+
+        navBarPanel.add(btnHome);
+        navBarPanel.add(btnCategory);
+        navBarPanel.add(btnBudget);
+        navBarPanel.add(btnTransaction);
+
+        contentPane.add(navBarPanel, BorderLayout.WEST);
+
+        contentPanel = new JPanel();
+        contentPanel.setLayout(new BorderLayout());
+        contentPane.add(contentPanel, BorderLayout.CENTER);
+
+        initView(listJpanel.get(0));
+        addEvents();
+    }
 }
