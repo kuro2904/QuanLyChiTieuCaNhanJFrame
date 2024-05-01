@@ -4,11 +4,13 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import models.User;
-import ui.customPanels.BudgetPanel;
-import ui.customPanels.CategoryPanel;
-import ui.customPanels.HomePanel;
-import ui.customPanels.TransactionPanel;
+import ui.dashboardPanel.BudgetPanel;
+import ui.dashboardPanel.CategoryPanel;
+import ui.dashboardPanel.HomePanel;
+import ui.dashboardPanel.TransactionPanel;
 
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.List;
 
 public class Dashboard extends JFrame {
@@ -22,11 +24,10 @@ public class Dashboard extends JFrame {
     private JPanel currPanel;
     private JPanel contentPanel;
     private List<JPanel> listJpanel;
-    private JLabel lblNewLabel;
 
     private void initView(JPanel panel) {
         currPanel = panel;
-        contentPanel.add(currPanel);
+        contentPanel.add(currPanel, BorderLayout.CENTER);
         contentPanel.revalidate(); // Revalidate the content panel
         contentPanel.repaint(); // Repaint the content panel
     }
@@ -45,9 +46,10 @@ public class Dashboard extends JFrame {
         initView(panel); // Initialize the new panel
     }
 
-    public Dashboard(User user) {
-    	setTitle("Quản lý chi tiêu");
-        listJpanel = List.of(new HomePanel(), new CategoryPanel(), new TransactionPanel(), new BudgetPanel());
+    public Dashboard(User user) throws Exception {
+    	setResizable(false);
+        setTitle("Quản lý chi tiêu");
+        listJpanel = List.of(new HomePanel(), new CategoryPanel(), new BudgetPanel(), new TransactionPanel());
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         int appWidth = 996; // Application width
@@ -81,5 +83,16 @@ public class Dashboard extends JFrame {
 
         initView(listJpanel.get(0));
         addEvents();
+
+        // Add a component listener to handle resizing
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                // Adjust the size of the navigation bar panel based on the frame height
+                int navBarHeight = getHeight();
+                navBarPanel.setPreferredSize(new Dimension(navBarWidth, navBarHeight));
+                contentPane.revalidate();
+            }
+        });
     }
 }

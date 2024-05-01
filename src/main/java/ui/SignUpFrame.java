@@ -107,7 +107,12 @@ public class SignUpFrame extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                performSignUp(currentFrame);
+                try {
+					performSignUp(currentFrame);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             }
         });
         btnBack.addActionListener(new ActionListener() {
@@ -121,7 +126,7 @@ public class SignUpFrame extends JFrame {
 
     }
 
-    private void performSignUp(JFrame currentFrame) {
+    private void performSignUp(JFrame currentFrame) throws Exception {
         String email = tfEmail.getText().trim();
         String userName = tfUserName.getText().trim();
         String password = tfPassword.getText().trim();

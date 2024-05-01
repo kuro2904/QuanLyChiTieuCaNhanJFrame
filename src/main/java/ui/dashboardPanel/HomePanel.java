@@ -1,4 +1,4 @@
-package ui.customPanels;
+package ui.dashboardPanel;
 
 import application.Application;
 

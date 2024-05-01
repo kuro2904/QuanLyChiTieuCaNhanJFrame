@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class Category {
 	private int categoryId;
 	private String name;
-	private Type type;
+	private boolean type;  // False is expense - True is income
 	private	int userId;
 	
 }

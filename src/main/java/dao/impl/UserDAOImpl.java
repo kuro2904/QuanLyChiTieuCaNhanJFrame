@@ -16,7 +16,6 @@ import java.util.Optional;
 import dao.UserDAO;
 import models.User;
 import util.BCrypPassword;
-import util.JdbcToolKit;
 
 public class UserDAOImpl implements UserDAO {
 

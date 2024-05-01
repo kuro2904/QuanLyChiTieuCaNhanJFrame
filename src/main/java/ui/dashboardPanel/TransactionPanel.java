@@ -1,4 +1,4 @@
-package ui.customPanels;
+package ui.dashboardPanel;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;

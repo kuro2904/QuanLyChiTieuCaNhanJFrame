@@ -58,7 +58,12 @@ public class MailAuthorizationFrm extends JFrame {
                     if (authService.updateLastLogin(user)) {
                         Application.curUser = user;
                         frame.dispose();
-                        new Dashboard(Application.curUser).setVisible(true);
+                        try {
+							new Dashboard(Application.curUser).setVisible(true);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
                         dispose();
                     } else {
                         JOptionPane.showMessageDialog(null, "Failed to update last login", "Error",
