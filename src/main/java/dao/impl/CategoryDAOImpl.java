@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import application.Application;
 import dao.CategoryDAO;
 import models.Category;
 import util.JdbcToolKit;
@@ -110,9 +111,10 @@ public class CategoryDAOImpl implements CategoryDAO {
 
 	@Override
 	public List<Category> getAll() {
-		String sql = "Select * from t_category";
+		String sql = "Select * from t_category where userId =?";
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, Application.curUser.getUserId());
 			ResultSet rs = st.executeQuery();
 			List<Category> categories = new ArrayList<Category>();
 			while (rs.next()) {

@@ -7,11 +7,14 @@ import models.User;
 import ui.dashboardPanel.BudgetPanel;
 import ui.dashboardPanel.CategoryPanel;
 import ui.dashboardPanel.HomePanel;
+import ui.dashboardPanel.SettingPanel;
 import ui.dashboardPanel.TransactionPanel;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Dashboard extends JFrame {
 
@@ -24,6 +27,7 @@ public class Dashboard extends JFrame {
     private JPanel currPanel;
     private JPanel contentPanel;
     private List<JPanel> listJpanel;
+    private JButton btnSetting;
 
     private void initView(JPanel panel) {
         currPanel = panel;
@@ -37,6 +41,7 @@ public class Dashboard extends JFrame {
         btnHome.addActionListener(e -> changePanel(listJpanel.get(0)));
         btnCategory.addActionListener(e -> changePanel(listJpanel.get(1)));
         btnBudget.addActionListener(e -> changePanel(listJpanel.get(2)));
+        btnSetting.addActionListener(e -> changePanel(listJpanel.get(4)));
     }
 
     private void changePanel(JPanel panel) {
@@ -49,7 +54,7 @@ public class Dashboard extends JFrame {
     public Dashboard(User user) throws Exception {
     	setResizable(false);
         setTitle("Quản lý chi tiêu");
-        listJpanel = List.of(new HomePanel(), new CategoryPanel(), new BudgetPanel(), new TransactionPanel());
+        listJpanel = List.of(new HomePanel(), new CategoryPanel(), new BudgetPanel(), new TransactionPanel(), new SettingPanel());
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         int appWidth = 996; // Application width
@@ -76,6 +81,9 @@ public class Dashboard extends JFrame {
         navBarPanel.add(btnTransaction);
 
         contentPane.add(navBarPanel, BorderLayout.WEST);
+        
+        btnSetting = new JButton("Setting");
+        navBarPanel.add(btnSetting);
 
         contentPanel = new JPanel();
         contentPanel.setLayout(new BorderLayout());
@@ -88,7 +96,6 @@ public class Dashboard extends JFrame {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                // Adjust the size of the navigation bar panel based on the frame height
                 int navBarHeight = getHeight();
                 navBarPanel.setPreferredSize(new Dimension(navBarWidth, navBarHeight));
                 contentPane.revalidate();

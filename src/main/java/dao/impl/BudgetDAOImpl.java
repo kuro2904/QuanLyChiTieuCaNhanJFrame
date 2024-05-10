@@ -131,9 +131,10 @@ public class BudgetDAOImpl implements BudgetDAO {
 
 	@Override
 	public List<Budget> getAll() {
-		String sql = "Select * from t_budget";
+		String sql = "Select * from t_budget where userId =?";
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, Application.curUser.getUserId());
 			ResultSet rs = st.executeQuery();
 			List<Budget> budgets = new ArrayList<Budget>();
 			while (rs.next()) {
